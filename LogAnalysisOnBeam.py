@@ -91,7 +91,7 @@ def sessionize(element, window=beam.DoFn.WindowParam):
 def convert_to_dataframe(element):
   return pd.DataFrame.from_records(element, index=[0])
 
-class merge_dataframes(beam.DoFn):
+class MergeDataframes(beam.DoFn):
   """Concatenate dataframes from parallel processes"""
   def process(self, element):
     logging.info(element)
@@ -153,7 +153,7 @@ def main(unused_argv):
                         >>  beam.combiners.ToList()
   # This step would be replaced by Write IO to external sink in production pipeline
                       | 'Merge DataFrames' 
-                        >> beam.ParDo(merge_dataframes()) 
+                        >> beam.ParDo(MergeDataframes()) 
                       | 'Write results'
                         >> beam.io.WriteToText('session_object', num_shards=1) 
   )
